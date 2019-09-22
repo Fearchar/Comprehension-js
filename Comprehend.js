@@ -15,25 +15,28 @@ class Comprehend {
     return this
   }
 
-  if(callback) {
+  if(callback) { // Only lets you access deepest loop. This is also due to placement in loop() within make()
     this.test = callback
     return this
   }
 
-  make(callback) {
-    const newArray = []
-
-    function loop(arraysIndex, arrays, instance) {
-      for (const item of arrays[arraysIndex]) {
-        if (arrays[arraysIndex+1]) loop(arraysIndex+1, arrays, instance)
-        if (((instance.test && instance.test(item)) || !instance.test) &&   arraysIndex+1 === arrays.length) {
-          newArray.push(callback(item))
+  make(callback) { // Only lets you access deepest loop
+    const resultArray = []
+    const instance = this
+    function loop(depth, items=[], arrays=instance.arrays, test=instance.test)  {
+      for (const item of arrays[depth]) {
+        items.push(item)
+        if (arrays[depth+1]) loop(depth+1, items)
+        else if ((!test || (test && test(item))) && depth+1 === arrays.length) {
+          console.log('items', items)
+          resultArray.push(callback(...items))
+          items.pop()
         }
       }
     }
 
-    loop(0, this.arrays, this)
-    return newArray
+    loop(0)
+    return resultArray
   }
 }
 
