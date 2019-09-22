@@ -15,12 +15,12 @@ class Comprehend {
     return this
   }
 
-  if(testFunction) {
-    this.test = testFunction
+  if(test) {
+    this.test = test
     return this
   }
 
-  make(actionFunction) {
+  make(action) {
     const resultArray = []
     const instance = this
 
@@ -30,7 +30,7 @@ class Comprehend {
         if (arrays[depth+1]) {
           makeLoop(depth+1, items)
         } else if ((!test || (test && test(...items))) && depth+1 === arrays.length) {
-          resultArray.push(actionFunction(...items))
+          resultArray.push(action(...items))
         }
         items.pop()
       }
