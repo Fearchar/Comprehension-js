@@ -1,31 +1,40 @@
 class Comprehend {
   constructor() {
-    this.array = null // []
+    this.arrays = []
     this.test = null // function
   }
 
   static for(array) {
-    this.array = array
-    this.test = null
+    const instance = new Comprehend()
+    instance.arrays.push(array)
+    return instance
+  }
+
+  andFor(array) {
+    this.arrays.push(array)
     return this
   }
 
-  static if(callback) {
+  if(callback) {
     this.test = callback
     return this
   }
 
-  static make(callback) {
+  make(callback) {
     const newArray = []
-    for (const item of this.array) {
-      if (
-        (this.test && this.test(item)) ||
-        !this.test) {
-        newArray.push(callback(item))
+
+    function loop(arraysIndex, arrays, instance) {
+      for (const item of arrays[arraysIndex]) {
+        if (arrays[arraysIndex+1]) loop(arraysIndex+1, arrays, instance)
+        if (((instance.test && instance.test(item)) || !instance.test) &&   arraysIndex+1 === arrays.length) {
+          newArray.push(callback(item))
+        }
       }
     }
+
+    loop(0, this.arrays, this)
     return newArray
   }
 }
 
-export default Comprehend
+module.exports = Comprehend
