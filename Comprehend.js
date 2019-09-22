@@ -4,15 +4,13 @@ class Comprehend {
     this.test = null
   }
 
-  static for(array) {
-    const instance = new Comprehend()
-    instance.arrays.push(array)
-    return instance
-  }
-
   for(array) {
     this.arrays.push(array)
     return this
+  }
+
+  static for(array) {
+    return new Comprehend().for(array)
   }
 
   if(test) {
@@ -22,14 +20,15 @@ class Comprehend {
 
   make(action) {
     const resultArray = []
-    const instance = this
+    const arrays = this.arrays
+    const test = this.test
 
-    function makeLoop(depth=0, items=[], arrays=instance.arrays, test=instance.test)  {
+    function makeLoop(depth=0, items=[])  {
       for (const item of arrays[depth]) {
         items.push(item)
         if (arrays[depth+1]) {
           makeLoop(depth+1, items)
-        } else if (!test || (test && test(...items))) {
+        } else if (!test || test(...items)) {
           resultArray.push(action(...items))
         }
         items.pop()
