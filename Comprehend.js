@@ -10,7 +10,7 @@ class Comprehend {
     return instance
   }
 
-  andFor(array) {
+  for(array) {
     this.arrays.push(array)
     return this
   }
