@@ -1,7 +1,7 @@
 class Comprehend {
   constructor() {
     this.arrays = []
-    this.test = null // function
+    this.test = null
   }
 
   static for(array) {
@@ -15,27 +15,28 @@ class Comprehend {
     return this
   }
 
-  if(callback) { // Only lets you access deepest loop. This is also due to placement in loop() within make()
-    this.test = callback
+  if(testFunction) {
+    this.test = testFunction
     return this
   }
 
-  make(callback) { // Only lets you access deepest loop
+  make(actionFunction) {
     const resultArray = []
     const instance = this
-    function loop(depth, items=[], arrays=instance.arrays, test=instance.test)  {
+
+    function makeLoop(depth, items=[], arrays=instance.arrays, test=instance.test)  {
       for (const item of arrays[depth]) {
         items.push(item)
-        if (arrays[depth+1]) loop(depth+1, items)
-        else if ((!test || (test && test(item))) && depth+1 === arrays.length) {
-          console.log('items', items)
-          resultArray.push(callback(...items))
-          items.pop()
+        if (arrays[depth+1]) {
+          makeLoop(depth+1, items)
+        } else if ((!test || (test && test(...items))) && depth+1 === arrays.length) {
+          resultArray.push(actionFunction(...items))
         }
+        items.pop()
       }
     }
 
-    loop(0)
+    makeLoop(0)
     return resultArray
   }
 }
