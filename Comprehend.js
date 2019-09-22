@@ -24,19 +24,19 @@ class Comprehend {
     const resultArray = []
     const instance = this
 
-    function makeLoop(depth, items=[], arrays=instance.arrays, test=instance.test)  {
+    function makeLoop(depth=0, items=[], arrays=instance.arrays, test=instance.test)  {
       for (const item of arrays[depth]) {
         items.push(item)
         if (arrays[depth+1]) {
           makeLoop(depth+1, items)
-        } else if ((!test || (test && test(...items))) && depth+1 === arrays.length) {
+        } else if (!test || (test && test(...items))) {
           resultArray.push(action(...items))
         }
         items.pop()
       }
     }
 
-    makeLoop(0)
+    makeLoop()
     return resultArray
   }
 }
